@@ -1,6 +1,4 @@
 {
-  "last_updated": "not yet",
-  "last_updated_ist": "Not checked yet — run the workflow to populate",
   "brands": {
     "Bodyzone": {
       "website": "bodyzonegym.in",
@@ -432,5 +430,7 @@
         }
       ]
     }
-  }
+  },
+  "last_updated": "2026-04-16 05:22 UTC",
+  "last_updated_ist": "16 Apr 2026, 10:52 AM IST"
 }
