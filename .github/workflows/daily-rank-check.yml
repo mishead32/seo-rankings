@@ -1,0 +1,91 @@
+name: SEO Daily Rank Check + Email Report
+
+on:
+  schedule:
+    - cron: '30 20 * * *'   # 2:00 AM IST  =  20:30 UTC  → check rankings
+    - cron: '30 3 * * *'    # 9:00 AM IST  =  03:30 UTC  → send email
+  workflow_dispatch:         # manual trigger anytime
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+
+  # ─────────────────────────────────────────────
+  #  JOB 1: Check rankings  (runs at 2 AM IST)
+  # ─────────────────────────────────────────────
+  check-rankings:
+    name: Check Google Rankings
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '30 20 * * *'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Check SERPER_API_KEY is set
+        run: |
+          if [ -z "${{ secrets.SERPER_API_KEY }}" ]; then
+            echo "ERROR: SERPER_API_KEY secret is missing!"
+            echo "Sign up FREE at https://serper.dev and add the key to GitHub Secrets"
+            exit 1
+          fi
+          echo "SERPER_API_KEY is ready."
+
+      - name: Run rank checker
+        env:
+          SERPER_API_KEY:   ${{ secrets.SERPER_API_KEY }}
+          SERPER_API_KEY_2: ${{ secrets.SERPER_API_KEY_2 }}
+        run: python check_rankings.py
+
+      - name: Save rankings to repo
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name  "github-actions[bot]"
+          git add rankings.json
+          git diff --staged --quiet && echo "No changes." || \
+            (git commit -m "SEO rankings update $(date -u '+%Y-%m-%d')" && git push)
+
+  # ─────────────────────────────────────────────
+  #  JOB 2: Send email  (runs at 9 AM IST)
+  # ─────────────────────────────────────────────
+  send-email:
+    name: Send Email Report
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '30 3 * * *'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Check GMAIL_PASSWORD is set
+        run: |
+          if [ -z "${{ secrets.GMAIL_PASSWORD }}" ]; then
+            echo "ERROR: GMAIL_PASSWORD secret is missing!"
+            exit 1
+          fi
+          echo "GMAIL_PASSWORD is ready."
+
+      - name: Send email report
+        env:
+          GMAIL_SENDER:   mis.gcs1@gmail.com
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+          GMAIL_TO:       rajsinghrana45@gmail.com
+        run: python send_email_report.py
