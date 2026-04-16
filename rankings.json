@@ -1,0 +1,436 @@
+{
+  "last_updated": "not yet",
+  "last_updated_ist": "Not checked yet — run the workflow to populate",
+  "brands": {
+    "Bodyzone": {
+      "website": "bodyzonegym.in",
+      "color": "#2563eb",
+      "keywords": [
+        {
+          "keyword": "Bodyzone Gym",
+          "rank": null
+        },
+        {
+          "keyword": "Body Zone Gym Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Best Gym In Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Body Zone Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Gym In Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Gym Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Gyms In Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Best Gyms In Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Premium Gym In Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Best Gym Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Chandigarh Gym",
+          "rank": null
+        },
+        {
+          "keyword": "Top gym in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Chandigarh Best Gym",
+          "rank": null
+        },
+        {
+          "keyword": "Chandigarh Gyms",
+          "rank": null
+        },
+        {
+          "keyword": "Top Gyms In Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Most Expensive Gym In Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "celebrity gym in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "gym in sector 9 chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "sector 9 gym chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "gym in sector 9",
+          "rank": null
+        },
+        {
+          "keyword": "expensive gym in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "biggest gym in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "aerobics classes in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Best aerobics classes chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "bhangra classes in chandigarh sector 9",
+          "rank": null
+        },
+        {
+          "keyword": "yoga classes in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Personal Training in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "yoga studio chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "fitness club in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "spinning classes in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "spinning studio in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "luxury gym in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "gym in chandigarh with fees",
+          "rank": null
+        },
+        {
+          "keyword": "biggest gym in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "good gyms in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "benefits of Bhangra classes",
+          "rank": null
+        }
+      ]
+    },
+    "Spa Kora": {
+      "website": "spakora.in",
+      "color": "#7c3aed",
+      "keywords": [
+        {
+          "keyword": "best spa in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "spa kora",
+          "rank": null
+        },
+        {
+          "keyword": "spa kora chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "spa in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "deep tissue spa in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "full body massage in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "spa kora in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "massage spa in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "spa services in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "best couple spa chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "couple spa in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Luxury Spa In Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "full body spa in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "best luxury massage in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "deep tissue massage in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "couple massage in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "couple massage spa in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Female to Male Spa in Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "deep tissue chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "balinese massage in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Best balinese massage in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "full body massage chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "massage service in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "massage in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "spa at chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Spa Massage Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "top spa in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Best Couple Spa In Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "couple massage spa chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "spa massage in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "thai massage in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "thai spa in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "deep tissue massage chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "couple Massage in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "spa service chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "premium massage service in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "premium spa in chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Premium spa services in Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Family Spa in Chandigarh",
+          "rank": null
+        },
+        {
+          "keyword": "Authentic Massage in Chandigarh",
+          "rank": null
+        }
+      ]
+    },
+    "BIPS": {
+      "website": "bipspatiala.net",
+      "color": "#059669",
+      "keywords": [
+        {
+          "keyword": "bips patiala",
+          "rank": null
+        },
+        {
+          "keyword": "bips school patiala",
+          "rank": null
+        },
+        {
+          "keyword": "bips school",
+          "rank": null
+        },
+        {
+          "keyword": "cbse schools in patiala",
+          "rank": null
+        },
+        {
+          "keyword": "best school in patiala",
+          "rank": null
+        },
+        {
+          "keyword": "schools in patiala",
+          "rank": null
+        },
+        {
+          "keyword": "best schools in patiala",
+          "rank": null
+        },
+        {
+          "keyword": "schools in patiala",
+          "rank": null
+        },
+        {
+          "keyword": "patiala best school",
+          "rank": null
+        },
+        {
+          "keyword": "top 10 schools in patiala",
+          "rank": null
+        },
+        {
+          "keyword": "top 5 schools in patiala",
+          "rank": null
+        },
+        {
+          "keyword": "schools patiala",
+          "rank": null
+        },
+        {
+          "keyword": "top schools in patiala",
+          "rank": null
+        },
+        {
+          "keyword": "patiala schools",
+          "rank": null
+        },
+        {
+          "keyword": "best cbse schools in patiala",
+          "rank": null
+        },
+        {
+          "keyword": "top 10 cbse schools in patiala",
+          "rank": null
+        },
+        {
+          "keyword": "cbse schools in patiala city",
+          "rank": null
+        },
+        {
+          "keyword": "best cbse school in patiala",
+          "rank": null
+        },
+        {
+          "keyword": "Nursery school in Patiala",
+          "rank": null
+        },
+        {
+          "keyword": "famous schools in Patiala",
+          "rank": null
+        },
+        {
+          "keyword": "top rated schools in Patiala",
+          "rank": null
+        },
+        {
+          "keyword": "Best international schools in Patiala",
+          "rank": null
+        },
+        {
+          "keyword": "best schools in Patiala with fees",
+          "rank": null
+        },
+        {
+          "keyword": "International Schools in Patiala",
+          "rank": null
+        },
+        {
+          "keyword": "lkg admission process in patiala schools",
+          "rank": null
+        },
+        {
+          "keyword": "ukg admission process in patiala schools",
+          "rank": null
+        },
+        {
+          "keyword": "preschool Admission Process in Patiala",
+          "rank": null
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>SEO Live Rankings Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',system-ui,sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+
+    /* ── Header ── */
+    header{background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 60%,#2563eb 100%);
+      padding:0 36px;height:72px;display:flex;align-items:center;
+      justify-content:space-between;box-shadow:0 4px 20px rgba(30,58,138,.3);
+      position:sticky;top:0;z-index:100}
+    .logo{display:flex;align-items:center;gap:14px}
+    .logo-icon{width:44px;height:44px;border-radius:11px;
+      background:rgba(255,255,255,.18);display:flex;align-items:center;
+      justify-content:center;font-size:22px}
+    .logo-text h1{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.3px}
+    .logo-text p{font-size:11px;color:rgba(255,255,255,.65);margin-top:2px}
+    .hdr-right{display:flex;align-items:center;gap:16px}
+    .last-check{text-align:right}
+    .lc-label{font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.07em}
+    .lc-val{font-size:13px;color:#fff;font-weight:600;margin-top:2px}
+    .refresh-btn{background:#fff;color:#1d4ed8;border:none;padding:9px 20px;
+      border-radius:9px;cursor:pointer;font-size:13px;font-weight:700;
+      display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;
+      box-shadow:0 2px 8px rgba(0,0,0,.12)}
+    .refresh-btn:hover{background:#eff6ff;transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.15)}
+    .refresh-btn.spinning svg{animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── Main ── */
+    main{max-width:1300px;margin:0 auto;padding:28px 32px}
+
+    /* ── Brand tabs ── */
+    .brand-tabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+    .tab{padding:10px 26px;border-radius:50px;cursor:pointer;font-size:14px;
+      font-weight:600;border:2px solid #e2e8f0;background:#fff;color:#64748b;
+      transition:all .2s;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+    .tab:hover:not(.active){border-color:#bfdbfe;color:#2563eb;background:#eff6ff}
+    .tab.active{background:var(--tc,#2563eb);color:#fff;border-color:var(--tc,#2563eb);
+      box-shadow:0 4px 14px rgba(37,99,235,.3)}
+
+    /* ── Summary cards ── */
+    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+    .card{background:#fff;border-radius:14px;padding:20px 22px;
+      border:1px solid #e2e8f0;border-top:4px solid var(--cc,#2563eb);
+      box-shadow:0 2px 8px rgba(0,0,0,.05);transition:transform .2s,box-shadow .2s}
+    .card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.09)}
+    .card-label{font-size:10px;color:#94a3b8;text-transform:uppercase;
+      letter-spacing:.07em;font-weight:700;margin-bottom:8px}
+    .card-value{font-size:36px;font-weight:800;color:var(--cc,#1e293b);line-height:1}
+    .card-sub{font-size:11px;color:#94a3b8;margin-top:5px}
+
+    /* ── Legend ── */
+    .legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:16px}
+    .leg{display:flex;align-items:center;gap:7px;font-size:12px;color:#64748b;font-weight:500}
+    .leg-dot{width:9px;height:9px;border-radius:50%}
+
+    /* ── Table panel ── */
+    .panel{background:#fff;border-radius:14px;border:1px solid #e2e8f0;
+      box-shadow:0 2px 8px rgba(0,0,0,.05);overflow:hidden}
+    .toolbar{display:flex;align-items:center;justify-content:space-between;
+      padding:16px 22px;border-bottom:1px solid #f1f5f9;background:#fafbfc;
+      flex-wrap:wrap;gap:10px}
+    .toolbar-left h3{font-size:15px;font-weight:700;color:#1e293b}
+    .toolbar-left p{font-size:12px;color:#94a3b8;margin-top:2px}
+    .search-wrap{position:relative}
+    .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);
+      color:#94a3b8;pointer-events:none}
+    .search-inp{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:9px;
+      padding:8px 12px 8px 32px;font-size:13px;width:220px;color:#1e293b;
+      font-family:inherit;transition:all .2s}
+    .search-inp:focus{outline:none;border-color:#2563eb;background:#fff;
+      box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+    .search-inp::placeholder{color:#cbd5e1}
+    .tscroll{overflow-x:auto}
+    table{width:100%;border-collapse:collapse}
+    thead th{background:#f8fafc;padding:10px 16px;text-align:left;font-size:11px;
+      font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;
+      border-bottom:2px solid #e2e8f0;white-space:nowrap}
+    tbody tr{border-bottom:1px solid #f1f5f9;transition:background .1s}
+    tbody tr:hover{background:#f8fafc}
+    tbody tr:last-child{border-bottom:none}
+    td{padding:11px 16px;vertical-align:middle}
+    .td-num{color:#cbd5e1;font-size:12px;font-weight:600;width:40px}
+    .td-kw{color:#334155;font-size:14px;font-weight:500}
+    .td-rank{width:120px}
+    .pill{display:inline-flex;align-items:center;justify-content:center;
+      min-width:52px;height:28px;border-radius:7px;font-size:13px;
+      font-weight:700;letter-spacing:-.2px}
+    .p1,.p2,.p3{background:#dcfce7;color:#15803d}
+    .p4,.p5,.p6,.p7,.p8,.p9,.p10{background:#fef9c3;color:#a16207}
+    .pout{background:#fee2e2;color:#dc2626}
+    .pnone{color:#e2e8f0;font-size:18px}
+
+    /* ── States ── */
+    .state{text-align:center;padding:64px 24px}
+    .state-icon{font-size:42px;margin-bottom:14px}
+    .state h3{font-size:17px;color:#64748b;margin-bottom:6px;font-weight:700}
+    .state p{font-size:13px;color:#94a3b8;line-height:1.7}
+    .spinner{width:36px;height:36px;border:3px solid #e2e8f0;
+      border-top-color:#2563eb;border-radius:50%;animation:spin .7s linear infinite;
+      margin:0 auto 14px}
+
+    footer{text-align:center;padding:24px;font-size:12px;color:#94a3b8}
+
+    @media(max-width:900px){
+      main{padding:18px 14px}
+      header{padding:0 14px}
+      .cards{grid-template-columns:repeat(2,1fr)}
+      .logo-text p{display:none}
+    }
+    @media(max-width:600px){
+      .cards{grid-template-columns:1fr 1fr;gap:10px}
+      .hdr-right .last-check{display:none}
+      .search-inp{width:160px}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">📈</div>
+    <div class="logo-text">
+      <h1>SEO Live Rankings Dashboard</h1>
+      <p>Bodyzone · Spa Kora · BIPS &nbsp;·&nbsp; India · Auto-updated daily 2 AM IST</p>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="last-check">
+      <div class="lc-label">Last Checked</div>
+      <div class="lc-val" id="lastUpdated">—</div>
+    </div>
+    <button class="refresh-btn" id="refreshBtn" onclick="loadData()">
+      <svg id="refreshIcon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+        <path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+      </svg>
+      Refresh
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- Brand Tabs -->
+  <div class="brand-tabs" id="brandTabs">
+    <button class="tab active" style="--tc:#2563eb" onclick="switchBrand('Bodyzone',this)">🏋️ Bodyzone</button>
+    <button class="tab"        style="--tc:#7c3aed" onclick="switchBrand('Spa Kora',this)">💆 Spa Kora</button>
+    <button class="tab"        style="--tc:#059669" onclick="switchBrand('BIPS',this)">🎓 BIPS</button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="cards">
+    <div class="card" style="--cc:#64748b">
+      <div class="card-label">Total Keywords</div>
+      <div class="card-value" id="cTotal">—</div>
+      <div class="card-sub">being tracked</div>
+    </div>
+    <div class="card" style="--cc:#15803d">
+      <div class="card-label">🟢 Top 3</div>
+      <div class="card-value" id="cTop3">—</div>
+      <div class="card-sub">Positions 1–3 · Excellent</div>
+    </div>
+    <div class="card" style="--cc:#d97706">
+      <div class="card-label">🟡 Page 1 (4–10)</div>
+      <div class="card-value" id="cTop10">—</div>
+      <div class="card-sub">Website on first page</div>
+    </div>
+    <div class="card" style="--cc:#dc2626">
+      <div class="card-label">🔴 Not in Top 10</div>
+      <div class="card-value" id="cMiss">—</div>
+      <div class="card-sub">Needs improvement</div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:#15803d"></div>Position 1–3 · Excellent</div>
+    <div class="leg"><div class="leg-dot" style="background:#d97706"></div>Position 4–10 · Good (Page 1)</div>
+    <div class="leg"><div class="leg-dot" style="background:#dc2626"></div>Not in Top 10 · Needs work</div>
+    <div class="leg"><div class="leg-dot" style="background:#e2e8f0"></div>No data yet</div>
+  </div>
+
+  <!-- Table Panel -->
+  <div class="panel">
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <h3 id="tableTitle">Keywords &amp; Rankings</h3>
+        <p id="tableSub">Live Google search data · India</p>
+      </div>
+      <div class="search-wrap">
+        <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="text" class="search-inp" id="searchInput"
+               placeholder="Search keywords…" oninput="filterRows()"/>
+      </div>
+    </div>
+    <div class="tscroll" id="tableWrap">
+      <div class="state"><div class="spinner"></div><h3>Loading…</h3><p>Fetching rankings data</p></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  SEO Rankings Dashboard &nbsp;·&nbsp; Google Website Rankings &nbsp;·&nbsp;
+  Auto-updated daily 2 AM IST &nbsp;·&nbsp; Email report 9 AM IST to rajsinghrana45@gmail.com
+</footer>
+
+<script>
+  let DATA = null, BRAND = 'Bodyzone';
+
+  function pill(r) {
+    if (r === null || r === undefined) return '<span class="pill pnone">—</span>';
+    if (r <= 10) return `<span class="pill p${r}">#${r}</span>`;
+    return `<span class="pill pout">#${r}</span>`;
+  }
+
+  function updateCards(kws) {
+    document.getElementById('cTotal').textContent = kws.length;
+    document.getElementById('cTop3').textContent  = kws.filter(k => k.rank && k.rank <= 3).length;
+    document.getElementById('cTop10').textContent = kws.filter(k => k.rank && k.rank <= 10).length;
+    document.getElementById('cMiss').textContent  = kws.filter(k => !k.rank).length;
+  }
+
+  function renderTable(kws) {
+    if (!kws || !kws.length) {
+      document.getElementById('tableWrap').innerHTML =
+        '<div class="state"><div class="state-icon">⏳</div>' +
+        '<h3>No data yet</h3>' +
+        '<p>Run the GitHub Actions workflow to populate rankings.<br>' +
+        'It runs automatically every night at 2 AM IST.</p></div>';
+      return;
+    }
+    const rows = kws.map((k, i) =>
+      `<tr class="kwrow" data-kw="${k.keyword.toLowerCase()}">
+        <td class="td-num">${i+1}</td>
+        <td class="td-kw">${k.keyword}</td>
+        <td class="td-rank">${pill(k.rank)}</td>
+      </tr>`
+    ).join('');
+    document.getElementById('tableWrap').innerHTML =
+      `<table><thead><tr>
+        <th>#</th><th>Keyword</th><th>🌐 Google Rank (India)</th>
+      </tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  function filterRows() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('.kwrow').forEach(r => {
+      r.style.display = r.dataset.kw.includes(q) ? '' : 'none';
+    });
+  }
+
+  function switchBrand(brand, el) {
+    BRAND = brand;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('searchInput').value = '';
+    if (DATA && DATA.brands && DATA.brands[brand]) {
+      const b = DATA.brands[brand];
+      document.getElementById('tableTitle').textContent = `${brand} · ${b.website}`;
+      document.getElementById('tableSub').textContent   = 'Live Google rankings · India · Website only';
+      updateCards(b.keywords || []);
+      renderTable(b.keywords || []);
+    } else {
+      updateCards([]);
+      renderTable([]);
+    }
+  }
+
+  async function loadData() {
+    const btn = document.getElementById('refreshBtn');
+    btn.classList.add('spinning');
+    document.getElementById('tableWrap').innerHTML =
+      '<div class="state"><div class="spinner"></div><h3>Loading…</h3></div>';
+    try {
+      const res = await fetch('rankings.json?t=' + Date.now());
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      DATA = await res.json();
+      document.getElementById('lastUpdated').textContent =
+        DATA.last_updated_ist || DATA.last_updated || 'Unknown';
+      switchBrand(BRAND, document.querySelector('.tab.active'));
+    } catch (e) {
+      document.getElementById('tableWrap').innerHTML =
+        `<div class="state"><div class="state-icon">⚙️</div>
+        <h3>Setting up…</h3>
+        <p>Run the GitHub Actions workflow to populate rankings.<br>
+        <small style="color:#94a3b8">${e.message}</small></p></div>`;
+      document.getElementById('lastUpdated').textContent = 'Not yet';
+    }
+    btn.classList.remove('spinning');
+  }
+
+  loadData();
+  setInterval(loadData, 10 * 60 * 1000);  // auto-refresh every 10 minutes
+</script>
+
+</body>
+</html>
