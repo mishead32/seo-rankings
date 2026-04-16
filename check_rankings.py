@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """
-SEO Rank Checker — Google Custom Search API
-FREE: 100 queries/day, resets every day forever — no credits, no limits
-Checks website ranking on Google India for 3 brands
+SEO Rank Checker — Serper.dev API (Real Google Results)
+Free signup at serper.dev gives 2500 credits per account.
+Supports 2 API keys (SERPER_API_KEY + SERPER_API_KEY_2) for extended use.
+When key 1 runs out, automatically switches to key 2.
 """
 import requests, json, os, time
 from datetime import datetime, timezone, timedelta
 
-GOOGLE_API_KEY = os.environ.get("GOOGLE_CSE_API_KEY", "").strip()
-GOOGLE_CX      = os.environ.get("GOOGLE_CSE_CX", "").strip()
+# ── API Keys (add both in GitHub Secrets for longer free use) ─────────────────
+KEY_1 = os.environ.get("SERPER_API_KEY",   "").strip()
+KEY_2 = os.environ.get("SERPER_API_KEY_2", "").strip()
 
 BRANDS = {
     "Bodyzone": {
@@ -131,31 +133,34 @@ BRANDS = {
             "ukg admission process in patiala schools",
             "preschool Admission Process in Patiala",
         ]
-    },
+    }
 }
 
 
-def get_rank(keyword, domain):
-    """Return (rank, error). rank=1-10 if found, None if not in top 10."""
+def get_rank(keyword, domain, api_key):
+    """Search Google via Serper.dev and return (rank, error_type)."""
     try:
-        r = requests.get(
-            "https://www.googleapis.com/customsearch/v1",
-            params={
-                "key": GOOGLE_API_KEY, "cx": GOOGLE_CX,
-                "q":   keyword, "num": 10, "gl": "in", "hl": "en"
-            },
+        r = requests.post(
+            "https://google.serper.dev/search",
+            headers={"X-API-KEY": api_key, "Content-Type": "application/json"},
+            json={"q": keyword, "gl": "in", "hl": "en", "num": 10},
             timeout=15
         )
+        if r.status_code == 403 or r.status_code == 429:
+            return None, "credits_exhausted"
+
         data = r.json()
-        if "error" in data:
-            msg = str(data["error"]).lower()
-            if "quota" in msg or data["error"].get("code") == 429:
-                return None, "quota"
-            return None, "error"
-        for i, item in enumerate(data.get("items", []), 1):
+
+        # Check for credit exhaustion in response
+        if "error" in data or data.get("credits", 1) == 0:
+            return None, "credits_exhausted"
+
+        for i, item in enumerate(data.get("organic", []), 1):
             if domain.lower() in item.get("link", "").lower():
                 return i, None
-        return None, None
+
+        return None, None   # not in top 10
+
     except Exception as e:
         print(f"    Error: {e}")
         return None, "error"
@@ -163,54 +168,87 @@ def get_rank(keyword, domain):
 
 def main():
     print("=" * 55)
-    print("  SEO RANK CHECKER — Google Custom Search API")
-    print("  100 free queries/day — resets daily forever")
+    print("  SEO RANK CHECKER — Serper.dev (Real Google Results)")
     print("=" * 55)
 
-    if not GOOGLE_API_KEY:
-        print("ERROR: GOOGLE_CSE_API_KEY not set!"); raise SystemExit(1)
-    if not GOOGLE_CX:
-        print("ERROR: GOOGLE_CSE_CX not set!"); raise SystemExit(1)
+    # Determine which API key to use
+    active_key  = KEY_1
+    active_label = "KEY 1"
 
+    if not KEY_1 and not KEY_2:
+        print("ERROR: No SERPER_API_KEY set in GitHub Secrets!")
+        print("Sign up FREE at https://serper.dev to get your key.")
+        raise SystemExit(1)
+
+    if not KEY_1 and KEY_2:
+        active_key   = KEY_2
+        active_label = "KEY 2"
+
+    print(f"  Using: {active_label}")
+
+    # Load previous rankings
     try:
         with open("rankings.json", encoding="utf-8") as f:
             old = json.load(f)
     except Exception:
         old = {"brands": {}}
 
-    result      = {"brands": {}}
-    query_count = 0
-    LIMIT       = 100
-    quota_hit   = False
+    result       = {"brands": {}}
+    query_count  = 0
+    credits_done = False
 
     for brand, info in BRANDS.items():
         print(f"\n  [{brand}]  {info['website']}")
+
         prev = {k["keyword"]: k for k in
                 old.get("brands", {}).get(brand, {}).get("keywords", [])}
         updated = []
 
         for kw in info["keywords"]:
-            if quota_hit or query_count >= LIMIT:
+
+            # If key 1 ran out, try key 2
+            if credits_done and active_key == KEY_1 and KEY_2:
+                print(f"\n  KEY 1 credits used up — switching to KEY 2 automatically")
+                active_key   = KEY_2
+                active_label = "KEY 2"
+                credits_done = False
+
+            if credits_done:
+                # Both keys exhausted — keep previous data
                 entry = dict(prev.get(kw, {"keyword": kw, "rank": None}))
                 entry["keyword"] = kw
                 updated.append(entry)
                 continue
 
             print(f"    [{query_count+1:03d}] {kw}", end=" ... ", flush=True)
-            rank, err = get_rank(kw, info["website"])
+            rank, err = get_rank(kw, info["website"], active_key)
 
-            if err == "quota":
-                print("QUOTA HIT — keeping previous data for remaining keywords")
-                quota_hit = True
-                entry = dict(prev.get(kw, {"keyword": kw, "rank": None}))
-                entry["keyword"] = kw
-                updated.append(entry)
-                continue
+            if err == "credits_exhausted":
+                if active_key == KEY_1 and KEY_2:
+                    print(f"KEY 1 exhausted — switching to KEY 2")
+                    active_key   = KEY_2
+                    active_label = "KEY 2"
+                    # Retry this keyword with key 2
+                    rank, err = get_rank(kw, info["website"], active_key)
+                    if err == "credits_exhausted":
+                        print("KEY 2 also exhausted — keeping previous data")
+                        credits_done = True
+                        entry = dict(prev.get(kw, {"keyword": kw, "rank": None}))
+                        entry["keyword"] = kw
+                        updated.append(entry)
+                        continue
+                else:
+                    print("Credits exhausted — keeping previous data for remaining keywords")
+                    credits_done = True
+                    entry = dict(prev.get(kw, {"keyword": kw, "rank": None}))
+                    entry["keyword"] = kw
+                    updated.append(entry)
+                    continue
 
             print(f"#{rank}" if rank else "not in top 10")
             updated.append({"keyword": kw, "rank": rank})
             query_count += 1
-            time.sleep(0.3)
+            time.sleep(0.2)
 
         result["brands"][brand] = {
             "website":  info["website"],
@@ -218,6 +256,7 @@ def main():
             "keywords": updated
         }
 
+    # Timestamps
     utc = datetime.now(timezone.utc)
     ist = utc + timedelta(hours=5, minutes=30)
     result["last_updated"]     = utc.strftime("%Y-%m-%d %H:%M UTC")
@@ -226,7 +265,7 @@ def main():
     with open("rankings.json", "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2, ensure_ascii=False)
 
-    print(f"\n  Done! {query_count} queries used. Quota resets tomorrow.")
+    print(f"\n  Done! {query_count} keywords checked.")
 
 
 if __name__ == "__main__":
